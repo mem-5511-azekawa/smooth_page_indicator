@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/painters/jumping_dot_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';

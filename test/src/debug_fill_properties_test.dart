@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() {
@@ -306,16 +306,14 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            theme: ThemeData.light().copyWith(
-              extensions: const [
-                SmoothPageIndicatorTheme(effect: JumpingDotEffect()),
-              ],
-            ),
-            home: Scaffold(
-              body: SmoothPageIndicator(
-                controller: controller,
-                count: 3,
-                // effect is null, should use theme's JumpingDotEffect
+            home: SmoothPageIndicatorTheme(
+              effect: const JumpingDotEffect(),
+              child: Scaffold(
+                body: SmoothPageIndicator(
+                  controller: controller,
+                  count: 3,
+                  // effect is null, should use theme's JumpingDotEffect
+                ),
               ),
             ),
           ),

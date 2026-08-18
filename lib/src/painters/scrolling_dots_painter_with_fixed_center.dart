@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// Paints dots scrolling transition effect and considers

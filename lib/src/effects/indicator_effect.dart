@@ -1,6 +1,5 @@
+import 'package:flutter/widgets.dart';
 import 'dart:ui' as ui show lerpDouble;
-
-import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 

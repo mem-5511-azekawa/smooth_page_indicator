@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
 import '../painters/color_transition_painter.dart';
 import '../painters/indicator_painter.dart';

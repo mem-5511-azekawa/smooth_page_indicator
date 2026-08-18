@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'dart:ui' as ui show lerpDouble;
+import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/painters/customizable_painter.dart';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
@@ -94,7 +94,7 @@ class CustomizableEffect extends IndicatorEffect {
           t < 0.5 ? activeColorOverride : other.activeColorOverride,
       inActiveColorOverride:
           t < 0.5 ? inActiveColorOverride : other.inActiveColorOverride,
-      spacing: ui.lerpDouble(spacing, other.spacing, t)!,
+      spacing: lerpDouble(spacing, other.spacing, t)!,
     );
   }
 }
@@ -125,7 +125,7 @@ class DotDecoration {
   /// Default constructor
   const DotDecoration(
       {this.borderRadius = BorderRadius.zero,
-      this.color = Colors.white,
+      this.color = const Color(0xFFFFFFFF),
       this.dotBorder = DotBorder.none,
       this.verticalOffset = 0.0,
       this.rotationAngle = 0.0,
@@ -136,14 +136,13 @@ class DotDecoration {
   static DotDecoration lerp(DotDecoration a, DotDecoration b, double t) {
     return DotDecoration(
         borderRadius: BorderRadius.lerp(a.borderRadius, b.borderRadius, t)!,
-        width: ui.lerpDouble(a.width, b.width, t) ?? 0.0,
-        height: ui.lerpDouble(a.height, b.height, t) ?? 0.0,
+        width: lerpDouble(a.width, b.width, t) ?? 0.0,
+        height: lerpDouble(a.height, b.height, t) ?? 0.0,
         color: Color.lerp(a.color, b.color, t)!,
         dotBorder: DotBorder.lerp(a.dotBorder, b.dotBorder, t),
         verticalOffset:
-            ui.lerpDouble(a.verticalOffset, b.verticalOffset, t) ?? 0.0,
-        rotationAngle:
-            ui.lerpDouble(a.rotationAngle, b.rotationAngle, t) ?? 0.0);
+            lerpDouble(a.verticalOffset, b.verticalOffset, t) ?? 0.0,
+        rotationAngle: lerpDouble(a.rotationAngle, b.rotationAngle, t) ?? 0.0);
   }
 
   /// Builds a new instance with the given
@@ -195,7 +194,7 @@ class DotBorder {
   /// Default constructor
   const DotBorder({
     this.width = 1.0,
-    this.color = Colors.black87,
+    this.color = const Color(0xDD000000),
     this.padding = 0.0,
     this.type = DotBorderType.solid,
   });
@@ -209,7 +208,7 @@ class DotBorder {
 
   const DotBorder._none()
       : width = 0.0,
-        color = Colors.transparent,
+        color = const Color(0x00000000),
         padding = 0.0,
         type = DotBorderType.none;
 
@@ -223,7 +222,7 @@ class DotBorder {
     }
     return DotBorder(
         color: Color.lerp(a.color, b.color, t)!,
-        width: ui.lerpDouble(a.width, b.width, t)!,
-        padding: ui.lerpDouble(a.padding, b.padding, t)!);
+        width: lerpDouble(a.width, b.width, t)!,
+        padding: lerpDouble(a.padding, b.padding, t)!);
   }
 }

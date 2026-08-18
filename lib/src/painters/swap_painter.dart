@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:smooth_page_indicator/src/effects/swap_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 

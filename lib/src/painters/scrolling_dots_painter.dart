@@ -1,7 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// Paints a scale-dot transition effect between active

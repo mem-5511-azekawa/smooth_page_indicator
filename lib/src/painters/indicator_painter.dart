@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/indicator_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
