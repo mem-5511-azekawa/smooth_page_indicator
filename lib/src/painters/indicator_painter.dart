@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/indicator_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
@@ -102,10 +103,10 @@ abstract class BasicIndicatorPainter extends IndicatorPainter {
 /// to avoid overriding [shouldRepaint] in every painter
 abstract class IndicatorPainter extends CustomPainter {
   /// The raw offset from the [PageController].page
-  final double offset;
+  final ValueListenable<double> offset;
 
   /// Default constructor
-  const IndicatorPainter(this.offset);
+  const IndicatorPainter(this.offset): super(repaint: offset);
 
   @override
   bool shouldRepaint(IndicatorPainter oldDelegate) {

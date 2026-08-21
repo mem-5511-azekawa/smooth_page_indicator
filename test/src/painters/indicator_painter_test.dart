@@ -13,7 +13,7 @@ void main() {
       final painter = WormPainter(
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
         indicatorColors: DefaultIndicatorColors.defaults,
       );
 
@@ -26,7 +26,7 @@ void main() {
       final painter = WormPainter(
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
         indicatorColors: DefaultIndicatorColors.defaults,
       );
 
@@ -42,7 +42,7 @@ void main() {
       final painter = WormPainter(
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
         indicatorColors: DefaultIndicatorColors.defaults,
       );
 
@@ -60,7 +60,7 @@ void main() {
       final painter = WormPainter(
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
         indicatorColors: DefaultIndicatorColors.defaults,
       );
 
@@ -81,7 +81,7 @@ void main() {
               painter: WormPainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -108,7 +108,7 @@ void main() {
               painter: WormPainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -130,7 +130,7 @@ void main() {
               painter: WormPainter(
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -153,7 +153,7 @@ void main() {
               painter: WormPainter(
                 effect: effect,
                 count: 5,
-                offset: 4.5, // Triggers portal travel
+                offset: AlwaysStoppedAnimation(4.5), // Triggers portal travel
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -171,12 +171,12 @@ void main() {
       final painter1 = WormPainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: AlwaysStoppedAnimation(0.0),
           indicatorColors: DefaultIndicatorColors.defaults);
       final painter2 = WormPainter(
           effect: effect,
           count: 5,
-          offset: 1.0,
+          offset: AlwaysStoppedAnimation(1.0),
           indicatorColors: DefaultIndicatorColors.defaults);
 
       expect(painter1.shouldRepaint(painter2), isTrue);
@@ -184,15 +184,16 @@ void main() {
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = WormEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = WormPainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: offset,
           indicatorColors: DefaultIndicatorColors.defaults);
       final painter2 = WormPainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: offset,
           indicatorColors: DefaultIndicatorColors.defaults);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
@@ -203,10 +204,10 @@ void main() {
       final painter = WormPainter(
           effect: effect,
           count: 5,
-          offset: 2.5,
+          offset: AlwaysStoppedAnimation(2.5),
           indicatorColors: DefaultIndicatorColors.defaults);
 
-      expect(painter.offset, 2.5);
+      expect(painter.offset.value, 2.5);
     });
   });
 }

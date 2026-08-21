@@ -11,11 +11,11 @@ void main() {
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: 10,
-        offset: 0.0,
+        offset: ValueNotifier(0.0),
       );
 
       expect(painter.count, 10);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -25,28 +25,29 @@ void main() {
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: ValueNotifier(0.0));
       final painter2 = ScrollingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 1.0);
+          offset: ValueNotifier(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = ScrollingDotsEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = ScrollingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: offset);
       final painter2 = ScrollingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -63,7 +64,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: ValueNotifier(0.0),
               ),
             ),
           ),
@@ -85,7 +86,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 1.0, // In pre-scroll range
+                offset: ValueNotifier(1.0), // In pre-scroll range
               ),
             ),
           ),
@@ -107,7 +108,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 5.0, // In scroll range
+                offset: ValueNotifier(5.0), // In scroll range
               ),
             ),
           ),
@@ -129,7 +130,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 8.0, // In after-scroll range
+                offset: ValueNotifier(8.0), // In after-scroll range
               ),
             ),
           ),
@@ -151,8 +152,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset:
-                    2.5, // switchPoint + 1 = 3, willStartScrolling when current + 1 == 3
+                offset: AlwaysStoppedAnimation(
+                    2.5), // switchPoint + 1 = 3, willStartScrolling when current + 1 == 3
               ),
             ),
           ),
@@ -174,7 +175,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 6.5, // Tests willStopScrolling
+                offset: ValueNotifier(6.5), // Tests willStopScrolling
               ),
             ),
           ),
@@ -196,7 +197,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 9.5,
+                offset: ValueNotifier(9.5),
               ),
             ),
           ),
@@ -218,7 +219,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5, // Less than maxVisibleDots
-                offset: 2.0,
+                offset: ValueNotifier(2.0),
               ),
             ),
           ),
@@ -243,7 +244,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: ValueNotifier(0.0),
               ),
             ),
           ),
@@ -268,7 +269,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: ValueNotifier(0.0),
               ),
             ),
           ),
@@ -290,7 +291,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 3.0,
+                offset: ValueNotifier(3.0),
               ),
             ),
           ),
@@ -315,7 +316,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 5.5,
+                offset: ValueNotifier(5.5),
               ),
             ),
           ),
@@ -339,7 +340,7 @@ void main() {
                   indicatorColors: DefaultIndicatorColors.defaults,
                   effect: effect,
                   count: 10,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                 ),
               ),
             ),
@@ -362,7 +363,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 4.5, // Tests firstVisibleDot + 1 scaling
+                offset: ValueNotifier(4.5), // Tests firstVisibleDot + 1 scaling
               ),
             ),
           ),
@@ -384,8 +385,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset:
-                    1.5, // Tests lastVisibleDot - 1 scaling in preScrollRange
+                offset: ValueNotifier(
+                    1.5), // Tests lastVisibleDot - 1 scaling in preScrollRange
               ),
             ),
           ),
@@ -408,7 +409,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 9.3, // offset > count - 1 with count > maxVisibleDots
+                offset: ValueNotifier(
+                    9.3), // offset > count - 1 with count > maxVisibleDots
               ),
             ),
           ),
@@ -431,7 +433,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.3, // offset > count - 1 with count <= maxVisibleDots
+                offset: ValueNotifier(
+                    4.3), // offset > count - 1 with count <= maxVisibleDots
               ),
             ),
           ),

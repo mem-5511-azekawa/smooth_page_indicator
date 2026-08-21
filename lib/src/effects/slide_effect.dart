@@ -1,4 +1,5 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/painters/slide_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
@@ -28,7 +29,10 @@ class SlideEffect extends BasicIndicatorEffect {
 
   @override
   IndicatorPainter buildPainter(
-      int count, double offset, DefaultIndicatorColors indicatorColors) {
+    int count,
+    ValueListenable<double> offset,
+    DefaultIndicatorColors indicatorColors,
+  ) {
     return SlidePainter(
         count: count,
         offset: offset,

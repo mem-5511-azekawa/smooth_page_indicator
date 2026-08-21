@@ -12,11 +12,11 @@ void main() {
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
       );
 
       expect(painter.count, 5);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -26,28 +26,29 @@ void main() {
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: AlwaysStoppedAnimation(0.0));
       final painter2 = SwapPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 1.0);
+          offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = SwapEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = SwapPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
       final painter2 = SwapPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -64,7 +65,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -86,7 +87,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.5,
+                offset: AlwaysStoppedAnimation(2.5),
               ),
             ),
           ),
@@ -108,7 +109,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -130,7 +131,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -152,7 +153,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -174,7 +175,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.7, // dotOffset > 0.5
+                offset: AlwaysStoppedAnimation(1.7), // dotOffset > 0.5
               ),
             ),
           ),
@@ -196,7 +197,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.5,
+                offset: AlwaysStoppedAnimation(4.5),
               ),
             ),
           ),
@@ -221,7 +222,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -246,7 +247,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -272,7 +273,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -296,7 +297,7 @@ void main() {
                   indicatorColors: DefaultIndicatorColors.defaults,
                   effect: effect,
                   count: 5,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                 ),
               ),
             ),
@@ -319,7 +320,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.0,
+                offset: AlwaysStoppedAnimation(4.0),
               ),
             ),
           ),
@@ -404,7 +405,7 @@ Widget _buildSwapPainter({
         indicatorColors: indicatorColors,
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

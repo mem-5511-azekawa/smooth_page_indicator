@@ -381,7 +381,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: SmoothIndicator(
-              offset: 1.5,
+              offset: AlwaysStoppedAnimation(1.5),
               count: 5,
               size: Size(120, 16),
             ),
@@ -397,7 +397,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: SmoothIndicator(
-              offset: 0,
+              offset: AlwaysStoppedAnimation(0),
               count: 5,
               size: Size(120, 16),
               quarterTurns: 1,

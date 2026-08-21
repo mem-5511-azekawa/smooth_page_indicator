@@ -74,18 +74,13 @@ mixin _SizeAndRotationCalculatorMixin {
     size = effect.calculateSize(count);
 
     /// if textDirection is not provided use the nearest directionality up the widgets tree;
-    final isRTL = (textDirection ?? _getDirectionality()) == TextDirection.rtl;
+    final isRTL =
+        (textDirection ?? Directionality.maybeOf(context)) == TextDirection.rtl;
     if (axisDirection == Axis.vertical) {
       quarterTurns = 1;
     } else {
       quarterTurns = isRTL ? 2 : 0;
     }
-  }
-
-  TextDirection? _getDirectionality() {
-    return context
-        .findAncestorWidgetOfExactType<Directionality>()
-        ?.textDirection;
   }
 }
 
@@ -93,11 +88,22 @@ class _SmoothPageIndicatorState extends State<SmoothPageIndicator>
     with _SizeAndRotationCalculatorMixin {
   late IndicatorEffect _effect;
 
+  late ValueListenable<double> _offset =
+      _PageOffsetNotifier(widget.controller, widget.count);
+
   @override
   void didUpdateWidget(covariant SmoothPageIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateEffect();
-    updateSizeAndRotation();
+
+    if (widget.effect != oldWidget.effect) {
+      _updateEffect();
+      updateSizeAndRotation();
+    }
+
+    if (oldWidget.controller != widget.controller ||
+        oldWidget.count != widget.count) {
+      _offset = _PageOffsetNotifier(widget.controller, widget.count);
+    }
   }
 
   @override
@@ -115,29 +121,14 @@ class _SmoothPageIndicatorState extends State<SmoothPageIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: widget.controller,
-      builder: (context, _) => SmoothIndicator(
-        offset: _offset,
-        count: count,
-        effect: effect,
-        onDotClicked: widget.onDotClicked,
-        size: size,
-        quarterTurns: quarterTurns,
-      ),
+    return SmoothIndicator(
+      offset: _offset,
+      count: count,
+      effect: effect,
+      onDotClicked: widget.onDotClicked,
+      size: size,
+      quarterTurns: quarterTurns,
     );
-  }
-
-  double get _offset {
-    try {
-      var offset = widget.controller.page;
-      if (offset == null || offset.isNaN) {
-        return widget.controller.initialPage.toDouble();
-      }
-      return offset % widget.count;
-    } catch (_) {
-      return widget.controller.initialPage.toDouble();
-    }
   }
 
   @override
@@ -167,7 +158,7 @@ class _SmoothPageIndicatorState extends State<SmoothPageIndicator>
 /// page using [offset]
 class SmoothIndicator extends StatelessWidget {
   /// The active page offset
-  final double offset;
+  final ValueListenable<double> offset;
 
   /// Holds effect configuration to be used in the [BasicIndicatorPainter]
   final IndicatorEffect effect;
@@ -215,8 +206,10 @@ class SmoothIndicator extends StatelessWidget {
 
   void _onTap(TapUpDetails details) {
     if (onDotClicked != null) {
-      var index = effect.hitTestDots(details.localPosition.dx, count, offset);
-      if (index != -1 && index != offset.toInt()) {
+      final rawOffset = offset.value;
+      var index =
+          effect.hitTestDots(details.localPosition.dx, count, rawOffset);
+      if (index != -1 && index != rawOffset.toInt()) {
         onDotClicked?.call(index);
       }
     }
@@ -225,7 +218,7 @@ class SmoothIndicator extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DoubleProperty('offset', offset));
+    properties.add(DoubleProperty('offset', offset.value));
     properties.add(IntProperty('count', count));
     properties.add(DiagnosticsProperty<IndicatorEffect>('effect', effect));
     properties.add(DiagnosticsProperty<Size>('size', size));
@@ -237,7 +230,7 @@ class SmoothIndicator extends StatelessWidget {
 /// and it only needs to know active index
 ///
 /// Useful for paging widgets that does not use [PageController]
-class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
+class AnimatedSmoothIndicator extends StatefulWidget {
   /// The index of active page
   final int activeIndex;
 
@@ -257,6 +250,15 @@ class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
   /// Reports dot-taps
   final Function(int index)? onDotClicked;
 
+  /// The curve used to animate between active indices.
+  final Curve curve;
+
+  /// The duration of the animation between active indices.
+  final Duration duration;
+
+  /// Called when an active-index animation completes.
+  final VoidCallback? onEnd;
+
   /// Default constructor
   const AnimatedSmoothIndicator({
     super.key,
@@ -266,27 +268,49 @@ class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
     this.textDirection,
     this.onDotClicked,
     this.effect,
-    super.curve = Curves.easeInOut,
-    super.duration = const Duration(milliseconds: 300),
-    super.onEnd,
+    this.curve = Curves.easeInOut,
+    this.duration = const Duration(milliseconds: 300),
+    this.onEnd,
   });
 
   @override
-  AnimatedWidgetBaseState<AnimatedSmoothIndicator> createState() =>
+  State<AnimatedSmoothIndicator> createState() =>
       _AnimatedSmoothIndicatorState();
 }
 
-class _AnimatedSmoothIndicatorState
-    extends AnimatedWidgetBaseState<AnimatedSmoothIndicator>
-    with _SizeAndRotationCalculatorMixin {
-  Tween<double>? _offset;
+class _AnimatedSmoothIndicatorState extends State<AnimatedSmoothIndicator>
+    with SingleTickerProviderStateMixin, _SizeAndRotationCalculatorMixin {
+  late final AnimationController _animationController;
+  late Animation<double> _offsetAnimation;
   late IndicatorEffect _effect;
+
+  int _previousActiveIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    )..addStatusListener(_handleAnimationStatus);
+    _offsetAnimation = AlwaysStoppedAnimation(_targetOffset);
+  }
 
   @override
   void didUpdateWidget(covariant AnimatedSmoothIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateEffect();
-    updateSizeAndRotation();
+
+    if (widget.effect != oldWidget.effect) {
+      _updateEffect();
+      updateSizeAndRotation();
+    }
+
+    _animationController.duration = widget.duration;
+
+    if (widget.activeIndex != oldWidget.activeIndex ||
+        widget.count != oldWidget.count) {
+      _animateToTarget();
+    }
+    _previousActiveIndex = widget.activeIndex;
   }
 
   @override
@@ -302,13 +326,32 @@ class _AnimatedSmoothIndicatorState
         const WormEffect();
   }
 
+  void _animateToTarget() {
+    _offsetAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: widget.curve,
+    ).drive(
+      _ModuloTween(
+        begin: _previousActiveIndex.toDouble(),
+        end: _targetOffset,
+        max: widget.count,
+      ),
+    );
+    _animationController.forward(from: 0);
+  }
+
+  void _handleAnimationStatus(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      widget.onEnd?.call();
+    }
+  }
+
   @override
-  void forEachTween(visitor) {
-    _offset = visitor(
-      _offset,
-      widget.activeIndex.toDouble(),
-      (dynamic value) => Tween<double>(begin: value as double),
-    ) as Tween<double>;
+  void dispose() {
+    _animationController
+      ..removeStatusListener(_handleAnimationStatus)
+      ..dispose();
+    super.dispose();
   }
 
   @override
@@ -323,14 +366,12 @@ class _AnimatedSmoothIndicatorState
   @override
   TextDirection? get textDirection => widget.textDirection;
 
+  double get _targetOffset => widget.activeIndex.toDouble();
+
   @override
   Widget build(BuildContext context) {
-    final offset = _offset;
-    if (offset == null) {
-      throw 'Offset has not been initialized';
-    }
     return SmoothIndicator(
-      offset: offset.evaluate(animation) % count,
+      offset: _offsetAnimation,
       count: widget.count,
       effect: effect,
       onDotClicked: widget.onDotClicked,
@@ -343,8 +384,54 @@ class _AnimatedSmoothIndicatorState
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IntProperty('count', count));
+    properties.add(IntProperty('activeIndex', widget.activeIndex));
     properties.add(DiagnosticsProperty<IndicatorEffect>('effect', effect));
     properties.add(DiagnosticsProperty<Size>('size', size));
     properties.add(IntProperty('quarterTurns', quarterTurns));
   }
+}
+
+/// A [ValueListenable] that listens to [PageController.page] and returns the current page offset
+class _PageOffsetNotifier extends ValueListenable<double> {
+  /// Default constructor
+  _PageOffsetNotifier(this.controller, this.count) : assert(count > 0);
+  final int count;
+  final PageController controller;
+
+  @override
+  double get value {
+    try {
+      final initialPage = controller.initialPage.toDouble();
+      if (!controller.hasClients) {
+        return initialPage;
+      }
+      final offset = controller.page;
+      if (offset == null || offset.isNaN) {
+        return initialPage;
+      }
+      return offset % count;
+    } catch (_) {
+      return controller.initialPage.toDouble();
+    }
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    controller.addListener(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    controller.removeListener(listener);
+  }
+}
+
+// Wraps the already-interpolated offset (not the curve progress) so it loops back into [0, max).
+class _ModuloTween extends Tween<double> {
+  _ModuloTween({super.begin, super.end, required this.max});
+
+  final int max;
+
+  @override
+  double transform(double t) => super.transform(t) % max;
 }

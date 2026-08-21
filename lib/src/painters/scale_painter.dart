@@ -1,4 +1,5 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/scale_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -15,7 +16,7 @@ class ScalePainter extends BasicIndicatorPainter {
 
   /// Default constructor
   ScalePainter({
-    required double offset,
+    required ValueListenable<double> offset,
     required this.effect,
     required int count,
     required DefaultIndicatorColors indicatorColors,
@@ -23,13 +24,14 @@ class ScalePainter extends BasicIndicatorPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var current = offset.floor();
+    var rawOffset = offset.value;
+    var current = rawOffset.floor();
     var activePaint = Paint()
       ..color = effectiveInactiveColor
       ..style = effect.activePaintStyle
       ..strokeWidth = effect.activeStrokeWidth;
 
-    var dotOffset = offset - current;
+    var dotOffset = rawOffset - current;
     var activeScale = effect.scale - 1.0;
     for (var index = 0; index < count; index++) {
       var dot = _calcBounds(size.height, index);
@@ -41,7 +43,7 @@ class ScalePainter extends BasicIndicatorPainter {
         // ! Both a and b are non nullable
         color = Color.lerp(
             effectiveActiveColor, effectiveInactiveColor, dotOffset)!;
-      } else if (index - 1 == current || (index == 0 && offset > count - 1)) {
+      } else if (index - 1 == current || (index == 0 && rawOffset > count - 1)) {
         scale = 1.0 + (activeScale * dotOffset);
         // ! Both a and b are non nullable
         color = Color.lerp(

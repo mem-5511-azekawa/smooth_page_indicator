@@ -19,7 +19,7 @@ void main() {
     test('buildPainter returns IndicatorPainter', () {
       const effect = WormEffect();
       final painter =
-          effect.buildPainter(5, 0, DefaultIndicatorColors.defaults);
+          effect.buildPainter(5, ValueNotifier(0), DefaultIndicatorColors.defaults);
 
       expect(painter, isA<IndicatorPainter>());
     });
@@ -83,7 +83,7 @@ void main() {
             body: CustomPaint(
               size: effect.calculateSize(5),
               painter:
-                  effect.buildPainter(5, 1.5, DefaultIndicatorColors.defaults),
+                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -101,7 +101,7 @@ void main() {
             body: CustomPaint(
               size: effect.calculateSize(5),
               painter:
-                  effect.buildPainter(5, 4.5, DefaultIndicatorColors.defaults),
+                  effect.buildPainter(5, ValueNotifier(4.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -119,7 +119,7 @@ void main() {
             body: CustomPaint(
               size: effect.calculateSize(5),
               painter:
-                  effect.buildPainter(5, 1.5, DefaultIndicatorColors.defaults),
+                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -137,7 +137,7 @@ void main() {
             body: CustomPaint(
               size: effect.calculateSize(5),
               painter:
-                  effect.buildPainter(5, 1.5, DefaultIndicatorColors.defaults),
+                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -155,7 +155,7 @@ void main() {
             body: CustomPaint(
               size: effect.calculateSize(5),
               painter:
-                  effect.buildPainter(5, 1.5, DefaultIndicatorColors.defaults),
+                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -169,7 +169,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: SmoothIndicator(
-              offset: 0,
+              offset: AlwaysStoppedAnimation(0),
               count: 5,
               size: Size(120, 16),
               effect: WormEffect(

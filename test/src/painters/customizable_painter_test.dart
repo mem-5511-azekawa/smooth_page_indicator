@@ -23,28 +23,29 @@ void main() {
       final painter = CustomizablePainter(
         effect: defaultEffect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
       );
 
       expect(painter.count, 5);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, defaultEffect);
     });
 
     test('shouldRepaint returns true when offset changes', () {
       final painter1 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: 0.0);
+          CustomizablePainter(effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(0.0));
       final painter2 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: 1.0);
+          CustomizablePainter(effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
+      final offset = ValueNotifier(0.0);
       final painter1 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: 0.0);
+          CustomizablePainter(effect: defaultEffect, count: 5, offset: offset);
       final painter2 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: 0.0);
+          CustomizablePainter(effect: defaultEffect, count: 5, offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -58,7 +59,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: defaultEffect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -77,7 +78,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: defaultEffect,
                 count: 5,
-                offset: 2.5,
+                offset: AlwaysStoppedAnimation(2.5),
               ),
             ),
           ),
@@ -96,7 +97,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: defaultEffect,
                 count: 5,
-                offset: 4.5,
+                offset: AlwaysStoppedAnimation(4.5),
               ),
             ),
           ),
@@ -138,7 +139,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithBorder,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -172,7 +173,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithVerticalOffset,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -208,7 +209,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effect,
                 count: 5,
-                offset: 1.0,
+                offset: AlwaysStoppedAnimation(1.0),
               ),
             ),
           ),
@@ -242,7 +243,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithRotation,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -276,7 +277,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithBorderRadius,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -310,7 +311,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithColorOverride,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -344,7 +345,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithColorOverride,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -380,7 +381,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithBothOverrides,
                 count: 5,
-                offset: 3.0,
+                offset: AlwaysStoppedAnimation(3.0),
               ),
             ),
           ),
@@ -414,7 +415,7 @@ void main() {
               painter: CustomizablePainter(
                 effect: effectWithZeroRotation,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -435,7 +436,7 @@ void main() {
                 painter: CustomizablePainter(
                   effect: defaultEffect,
                   count: 5,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                 ),
               ),
             ),
@@ -576,7 +577,7 @@ void main() {
       );
 
       final painter =
-          effect.buildPainter(5, 0, DefaultIndicatorColors.defaults);
+          effect.buildPainter(5, ValueNotifier(0.0), DefaultIndicatorColors.defaults);
       expect(painter, isA<CustomizablePainter>());
     });
   });
@@ -801,7 +802,7 @@ Widget _buildCustomizablePainter({
       painter: CustomizablePainter(
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

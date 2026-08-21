@@ -12,11 +12,11 @@ void main() {
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
       );
 
       expect(painter.count, 5);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -26,28 +26,29 @@ void main() {
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: AlwaysStoppedAnimation(0.0));
       final painter2 = ExpandingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 1.0);
+          offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = ExpandingDotsEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = ExpandingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
       final painter2 = ExpandingDotsPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -64,7 +65,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -86,7 +87,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
               ),
             ),
           ),
@@ -108,7 +109,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.0,
+                offset: AlwaysStoppedAnimation(4.0),
               ),
             ),
           ),
@@ -130,7 +131,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.5, // offset > count - 1
+                offset: AlwaysStoppedAnimation(4.5), // offset > count - 1
               ),
             ),
           ),
@@ -155,7 +156,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -177,7 +178,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.5,
+                offset: AlwaysStoppedAnimation(2.5),
               ),
             ),
           ),
@@ -202,7 +203,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -228,7 +229,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.0,
+                offset: AlwaysStoppedAnimation(1.0),
               ),
             ),
           ),
@@ -252,7 +253,7 @@ void main() {
                   indicatorColors: DefaultIndicatorColors.defaults,
                   effect: effect,
                   count: 5,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                 ),
               ),
             ),
@@ -353,7 +354,7 @@ Widget _buildExpandingDotsPainter({
         indicatorColors: indicatorColors,
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

@@ -1,4 +1,5 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// Paints dots scrolling transition effect and considers
@@ -13,14 +14,20 @@ class ScrollingDotsWithFixedCenterPainter extends BasicIndicatorPainter {
   ScrollingDotsWithFixedCenterPainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
   @override
   void paint(Canvas canvas, Size size) {
-    var current = offset.floor();
-    var dotOffset = offset - current;
+    final rawOffset = offset.value;
+
+     assert(
+      rawOffset.ceil() < count,
+      'ScrollingDotsWithFixedCenterPainter does not support infinite looping.',
+    );
+    var current = rawOffset.floor();
+    var dotOffset = rawOffset - current;
     var dotPaint = Paint()
       ..strokeWidth = effect.strokeWidth
       ..style = effect.paintStyle;
@@ -61,7 +68,7 @@ class ScrollingDotsWithFixedCenterPainter extends BasicIndicatorPainter {
 
       final rRect = _calcBounds(
         size.height,
-        size.width / 2 - (offset * (effect.dotWidth + effect.spacing)),
+        size.width / 2 - (rawOffset * (effect.dotWidth + effect.spacing)),
         index,
         scale,
       );

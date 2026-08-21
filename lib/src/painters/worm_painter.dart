@@ -1,4 +1,5 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/worm_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -17,7 +18,7 @@ class WormPainter extends BasicIndicatorPainter {
   WormPainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
@@ -27,10 +28,11 @@ class WormPainter extends BasicIndicatorPainter {
     paintStillDots(canvas, size);
 
     final activeDotPaint = Paint()..color = effectiveActiveColor;
-    final dotOffset = (offset - offset.toInt());
+    final rawOffset = offset.value;
+    final dotOffset = (rawOffset - rawOffset.toInt());
 
     // handle dot travel from end to start (for infinite pager support)
-    if (offset > count - 1) {
+    if (rawOffset > count - 1) {
       final startDot = calcPortalTravel(size, effect.dotWidth / 2, dotOffset);
       canvas.drawRRect(startDot, activeDotPaint);
 
@@ -44,7 +46,7 @@ class WormPainter extends BasicIndicatorPainter {
     }
 
     final wormOffset = dotOffset * 2;
-    final xPos = (offset.floor() * distance);
+    final xPos = (rawOffset.floor() * distance);
     final yPos = size.height / 2;
     var head = xPos;
     var tail = xPos + effect.dotWidth + (wormOffset * distance);

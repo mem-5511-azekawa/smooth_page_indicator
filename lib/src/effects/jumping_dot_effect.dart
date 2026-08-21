@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/painters/jumping_dot_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
@@ -40,7 +41,7 @@ class JumpingDotEffect extends BasicIndicatorEffect {
 
   @override
   IndicatorPainter buildPainter(
-      int count, double offset, DefaultIndicatorColors indicatorColors) {
+      int count, ValueListenable<double> offset, DefaultIndicatorColors indicatorColors) {
     return JumpingDotPainter(
         count: count,
         offset: offset,
