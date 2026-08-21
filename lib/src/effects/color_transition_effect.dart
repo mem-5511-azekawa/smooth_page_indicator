@@ -28,8 +28,8 @@ class ColorTransitionEffect extends BasicIndicatorEffect {
   });
 
   @override
-  IndicatorPainter buildPainter(
-      int count, ValueListenable<double> offset, DefaultIndicatorColors indicatorColors) {
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors) {
     return TransitionPainter(
       count: count,
       offset: offset,

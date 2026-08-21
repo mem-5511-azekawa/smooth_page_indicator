@@ -40,8 +40,8 @@ class JumpingDotEffect extends BasicIndicatorEffect {
   }
 
   @override
-  IndicatorPainter buildPainter(
-      int count, ValueListenable<double> offset, DefaultIndicatorColors indicatorColors) {
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors) {
     return JumpingDotPainter(
         count: count,
         offset: offset,

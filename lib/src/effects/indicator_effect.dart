@@ -12,8 +12,8 @@ abstract class IndicatorEffect {
   /// Builds a new painter every time the page offset changes
   ///
   /// [indicatorColors] is used to resolve null dot colors
-  IndicatorPainter buildPainter(
-      int count, ValueListenable<double> offset, DefaultIndicatorColors indicatorColors);
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors);
 
   /// Calculates the size of canvas based on
   /// dots count, size and spacing

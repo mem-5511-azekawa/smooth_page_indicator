@@ -61,8 +61,8 @@ class CustomizableEffect extends IndicatorEffect {
   }
 
   @override
-  IndicatorPainter buildPainter(
-      int count, ValueListenable<double> offset, DefaultIndicatorColors indicatorColors) {
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors) {
     return CustomizablePainter(count: count, offset: offset, effect: this);
   }
 

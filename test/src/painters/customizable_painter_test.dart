@@ -32,10 +32,10 @@ void main() {
     });
 
     test('shouldRepaint returns true when offset changes', () {
-      final painter1 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(0.0));
-      final painter2 =
-          CustomizablePainter(effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(1.0));
+      final painter1 = CustomizablePainter(
+          effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(0.0));
+      final painter2 = CustomizablePainter(
+          effect: defaultEffect, count: 5, offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
@@ -576,8 +576,8 @@ void main() {
         activeDotDecoration: DotDecoration(width: 14, height: 14),
       );
 
-      final painter =
-          effect.buildPainter(5, ValueNotifier(0.0), DefaultIndicatorColors.defaults);
+      final painter = effect.buildPainter(
+          5, ValueNotifier(0.0), DefaultIndicatorColors.defaults);
       expect(painter, isA<CustomizablePainter>());
     });
   });

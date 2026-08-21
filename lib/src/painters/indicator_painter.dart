@@ -106,7 +106,7 @@ abstract class IndicatorPainter extends CustomPainter {
   final ValueListenable<double> offset;
 
   /// Default constructor
-  const IndicatorPainter(this.offset): super(repaint: offset);
+  const IndicatorPainter(this.offset) : super(repaint: offset);
 
   @override
   bool shouldRepaint(IndicatorPainter oldDelegate) {

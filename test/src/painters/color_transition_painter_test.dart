@@ -257,7 +257,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: AlwaysStoppedAnimation(2.3), // current = 2, tests first branch
+                offset: AlwaysStoppedAnimation(
+                    2.3), // current = 2, tests first branch
               ),
             ),
           ),
@@ -279,7 +280,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: AlwaysStoppedAnimation(2.7), // current = 2, i = 3 tests second branch
+                offset: AlwaysStoppedAnimation(
+                    2.7), // current = 2, i = 3 tests second branch
               ),
             ),
           ),

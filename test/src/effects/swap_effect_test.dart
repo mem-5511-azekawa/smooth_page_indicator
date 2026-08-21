@@ -43,8 +43,8 @@ void main() {
 
     test('buildPainter returns IndicatorPainter', () {
       const effect = SwapEffect();
-      final painter =
-          effect.buildPainter(5, ValueNotifier(0), DefaultIndicatorColors.defaults);
+      final painter = effect.buildPainter(
+          5, ValueNotifier(0), DefaultIndicatorColors.defaults);
 
       expect(painter, isA<IndicatorPainter>());
     });
@@ -57,8 +57,8 @@ void main() {
           home: Scaffold(
             body: CustomPaint(
               size: effect.calculateSize(5),
-              painter:
-                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
+              painter: effect.buildPainter(
+                  5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -75,8 +75,8 @@ void main() {
           home: Scaffold(
             body: CustomPaint(
               size: effect.calculateSize(5),
-              painter:
-                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
+              painter: effect.buildPainter(
+                  5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),
@@ -93,8 +93,8 @@ void main() {
           home: Scaffold(
             body: CustomPaint(
               size: effect.calculateSize(5),
-              painter:
-                  effect.buildPainter(5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
+              painter: effect.buildPainter(
+                  5, ValueNotifier(1.5), DefaultIndicatorColors.defaults),
             ),
           ),
         ),

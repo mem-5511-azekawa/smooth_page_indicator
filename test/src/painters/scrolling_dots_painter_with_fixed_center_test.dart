@@ -177,7 +177,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: AlwaysStoppedAnimation(4.3), // Tests current + switchPoint scale
+                offset: AlwaysStoppedAnimation(
+                    4.3), // Tests current + switchPoint scale
               ),
             ),
           ),
@@ -200,7 +201,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: AlwaysStoppedAnimation(5.7), // Tests current - (switchPoint - 1) scale
+                offset: AlwaysStoppedAnimation(
+                    5.7), // Tests current - (switchPoint - 1) scale
               ),
             ),
           ),
@@ -222,7 +224,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: AlwaysStoppedAnimation(4.8), // Tests current - switchPoint scale
+                offset: AlwaysStoppedAnimation(
+                    4.8), // Tests current - switchPoint scale
               ),
             ),
           ),
@@ -245,7 +248,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: AlwaysStoppedAnimation(3.2), // Tests current + (switchPoint + 1) scale
+                offset: AlwaysStoppedAnimation(
+                    3.2), // Tests current + (switchPoint + 1) scale
               ),
             ),
           ),
@@ -394,7 +398,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: AlwaysStoppedAnimation(7.0), // Some dots will be outside visible range
+                offset: AlwaysStoppedAnimation(
+                    7.0), // Some dots will be outside visible range
               ),
             ),
           ),
@@ -462,7 +467,7 @@ void main() {
                   fixedCenter: true,
                   activeDotScale: scale,
                 ),
-                offset:5.0,
+                offset: 5.0,
               ),
             ),
         ],

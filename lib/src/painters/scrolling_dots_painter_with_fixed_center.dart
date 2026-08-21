@@ -22,7 +22,7 @@ class ScrollingDotsWithFixedCenterPainter extends BasicIndicatorPainter {
   void paint(Canvas canvas, Size size) {
     final rawOffset = offset.value;
 
-     assert(
+    assert(
       rawOffset.ceil() < count,
       'ScrollingDotsWithFixedCenterPainter does not support infinite looping.',
     );

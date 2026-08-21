@@ -25,7 +25,7 @@ void main() {
       final painter1 = ScalePainter(
           effect: effect,
           count: 5,
-          offset: AlwaysStoppedAnimation(0.0) ,
+          offset: AlwaysStoppedAnimation(0.0),
           indicatorColors: DefaultIndicatorColors.defaults);
       final painter2 = ScalePainter(
           effect: effect,

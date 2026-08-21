@@ -43,7 +43,8 @@ class ScalePainter extends BasicIndicatorPainter {
         // ! Both a and b are non nullable
         color = Color.lerp(
             effectiveActiveColor, effectiveInactiveColor, dotOffset)!;
-      } else if (index - 1 == current || (index == 0 && rawOffset > count - 1)) {
+      } else if (index - 1 == current ||
+          (index == 0 && rawOffset > count - 1)) {
         scale = 1.0 + (activeScale * dotOffset);
         // ! Both a and b are non nullable
         color = Color.lerp(
