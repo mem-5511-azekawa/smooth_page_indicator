@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-/// Holds theme-derived default colors for the indicator
+/// Holds default colors for an indicator.
 class DefaultIndicatorColors {
-  /// The color for active dots (defaults to theme's primary color)
+  /// The color for active dots.
   final Color active;
 
-  /// The color for inactive dots (defaults to theme's primary color with reduced opacity)
+  /// The color for inactive dots.
   final Color inactive;
 
   /// Creates an [DefaultIndicatorColors] instance
@@ -25,20 +25,10 @@ class DefaultIndicatorColors {
     return effect.activeDotColor ?? active;
   }
 
-  /// Creates [DefaultIndicatorColors] from the given [BuildContext]
-  /// using the app's primary color
-  factory DefaultIndicatorColors.fromContext(BuildContext context) {
-    final theme = Theme.of(context);
-    return DefaultIndicatorColors(
-      active: theme.primaryColor,
-      inactive: theme.unselectedWidgetColor.withValues(alpha: .1),
-    );
-  }
-
-  /// Default indicator colors
+  /// Fallback colors used when no [SmoothPageIndicatorTheme] supplies colors.
   static const defaults = DefaultIndicatorColors(
-    active: Colors.indigo,
-    inactive: Colors.grey,
+    active: Color(0xFF3F51B5),
+    inactive: Color(0xFF9E9E9E),
   );
 
   /// Linearly interpolates between two [DefaultIndicatorColors].
@@ -51,55 +41,55 @@ class DefaultIndicatorColors {
   }
 }
 
-/// A [ThemeExtension] that provides default configuration for [SmoothPageIndicator]
-/// and [AnimatedSmoothIndicator] widgets.
+/// An [InheritedTheme] that provides default configuration to descendant
+/// [SmoothPageIndicator] and [AnimatedSmoothIndicator] widgets.
 ///
 /// Usage:
 /// ```dart
 /// MaterialApp(
-///   theme: ThemeData.light().copyWith(
-///     extensions: [
-///       SmoothPageIndicatorTheme(
-///         effect: ExpandingDotsEffect(),
-///         colors: IndicatorColors(
-///           active: Colors.blue,
-///           inactive: Colors.grey,
-///         ),
-///       ),
-///     ],
+///   home: SmoothPageIndicatorTheme(
+///     effect: ExpandingDotsEffect(),
+///     defaultColors: DefaultIndicatorColors(
+///       active: Colors.blue,
+///       inactive: Colors.grey,
+///     ),
+///     child: MyPage(),
 ///   ),
 /// )
 /// ```
-class SmoothPageIndicatorTheme
-    extends ThemeExtension<SmoothPageIndicatorTheme> {
+class SmoothPageIndicatorTheme extends InheritedTheme {
   /// The default effect to use when none is specified.
   /// If null, [WormEffect] will be used as the fallback.
   final IndicatorEffect? effect;
 
-  /// Theme colors for the indicator.
-  /// If null, colors will be derived from the app theme.
+  /// Default colors for the indicator.
+  /// If null, [DefaultIndicatorColors.defaults] will be used.
   final DefaultIndicatorColors? defaultColors;
 
   /// Creates a [SmoothPageIndicatorTheme] instance
   const SmoothPageIndicatorTheme({
+    super.key,
     this.effect,
     this.defaultColors,
+    required super.child,
   });
 
-  @override
+  /// Creates a copy of this theme, replacing non-null arguments.
   SmoothPageIndicatorTheme copyWith({
     IndicatorEffect? effect,
     DefaultIndicatorColors? colors,
+    Widget? child,
   }) {
     return SmoothPageIndicatorTheme(
       effect: effect ?? this.effect,
       defaultColors: colors ?? defaultColors,
+      child: child ?? this.child,
     );
   }
 
-  @override
+  /// Linearly interpolates this theme's values with [other].
   SmoothPageIndicatorTheme lerp(
-    covariant ThemeExtension<SmoothPageIndicatorTheme>? other,
+    SmoothPageIndicatorTheme? other,
     double t,
   ) {
     if (other is! SmoothPageIndicatorTheme) {
@@ -123,19 +113,40 @@ class SmoothPageIndicatorTheme
     return SmoothPageIndicatorTheme(
       effect: lerpedEffect,
       defaultColors: lerpedColors,
+      child: t < 0.5 ? child : other.child,
+    );
+  }
+
+  @override
+
+  /// Returns whether dependents should rebuild after this theme changes.
+  bool updateShouldNotify(SmoothPageIndicatorTheme oldWidget) {
+    return effect != oldWidget.effect ||
+        defaultColors != oldWidget.defaultColors;
+  }
+
+  @override
+
+  /// Wraps [child] with this theme when it is moved to a new subtree.
+  Widget wrap(BuildContext context, Widget child) {
+    return SmoothPageIndicatorTheme(
+      effect: effect,
+      defaultColors: defaultColors,
+      child: child,
     );
   }
 
   /// Retrieves the [SmoothPageIndicatorTheme] from the given [BuildContext].
-  /// Returns null if no theme extension is found.
+  /// Returns null if no ancestor theme is found.
   static SmoothPageIndicatorTheme? of(BuildContext context) {
-    return Theme.of(context).extension<SmoothPageIndicatorTheme>();
+    return context
+        .dependOnInheritedWidgetOfExactType<SmoothPageIndicatorTheme>();
   }
 
-  /// Resolves the default [IndicatorEffect] and [DefaultIndicatorColors]
-  /// from the theme or provides fallbacks.
+  /// Resolves the [IndicatorEffect] and [DefaultIndicatorColors] from the
+  /// nearest theme, or provides fallbacks.
   /// If no effect is specified in the theme, defaults to [WormEffect].
-  /// If no colors are specified, derives them from the app theme.
+  /// If no colors are specified, uses [DefaultIndicatorColors.defaults].
   /// Returns a record of (effect, colors).
   static (IndicatorEffect effect, DefaultIndicatorColors colors)
       resolveDefaults(
@@ -143,8 +154,7 @@ class SmoothPageIndicatorTheme
   ) {
     final theme = SmoothPageIndicatorTheme.of(context);
     final effect = theme?.effect ?? const WormEffect();
-    final colors =
-        theme?.defaultColors ?? DefaultIndicatorColors.fromContext(context);
+    final colors = theme?.defaultColors ?? DefaultIndicatorColors.defaults;
     return (effect, colors);
   }
 }

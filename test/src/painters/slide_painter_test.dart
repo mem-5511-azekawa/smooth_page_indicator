@@ -1,5 +1,5 @@
 import 'package:alchemist/alchemist.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:smooth_page_indicator/src/painters/slide_painter.dart';
@@ -12,11 +12,11 @@ void main() {
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
       );
 
       expect(painter.count, 5);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -26,28 +26,29 @@ void main() {
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: AlwaysStoppedAnimation(0.0));
       final painter2 = SlidePainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 1.0);
+          offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = SlideEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = SlidePainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
       final painter2 = SlidePainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 5,
-          offset: 0.0);
+          offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -64,7 +65,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -86,7 +87,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.5,
+                offset: AlwaysStoppedAnimation(2.5),
               ),
             ),
           ),
@@ -108,7 +109,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 1.0,
+                offset: AlwaysStoppedAnimation(1.0),
               ),
             ),
           ),
@@ -130,7 +131,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 4.5, // offset > count - 1
+                offset: AlwaysStoppedAnimation(4.5), // offset > count - 1
               ),
             ),
           ),
@@ -155,7 +156,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -180,7 +181,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -206,7 +207,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -306,7 +307,7 @@ Widget _buildSlidePainter({
         indicatorColors: indicatorColors,
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

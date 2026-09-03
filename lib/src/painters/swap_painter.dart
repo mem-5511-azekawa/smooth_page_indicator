@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/swap_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -17,7 +18,7 @@ class SwapPainter extends BasicIndicatorPainter {
 
   /// Default constructor
   SwapPainter({
-    required double offset,
+    required ValueListenable<double> offset,
     required this.effect,
     required int count,
     required DefaultIndicatorColors indicatorColors,
@@ -25,14 +26,15 @@ class SwapPainter extends BasicIndicatorPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final current = offset.floor();
-    final dotOffset = offset - offset.floor();
+    final rawOffset = offset.value;
+    final current = rawOffset.floor();
+    final dotOffset = rawOffset - rawOffset.floor();
     final activePaint = Paint()..color = effectiveActiveColor;
     var dotScale = effect.dotWidth * .2;
     final yPos = size.height / 2;
     final xAnchor = effect.spacing / 2;
 
-    final isGoingThroughPortal = offset > count - 1;
+    final isGoingThroughPortal = rawOffset > count - 1;
     if (isGoingThroughPortal) {
       final startDot = calcPortalTravel(
           size,
@@ -87,7 +89,7 @@ class SwapPainter extends BasicIndicatorPainter {
             }
           }
           if (i == current) {
-            posOffset = offset;
+            posOffset = rawOffset;
             drawDot(xAnchor + posOffset * distance, yPos, activePaint, scale);
           } else {
             posOffset = i - dotOffset;

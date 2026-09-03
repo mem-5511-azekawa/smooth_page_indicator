@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/slide_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -17,7 +18,7 @@ class SlidePainter extends BasicIndicatorPainter {
   SlidePainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
@@ -28,9 +29,10 @@ class SlidePainter extends BasicIndicatorPainter {
     paintStillDots(canvas, size);
 
     final activeDotPainter = Paint()..color = effectiveActiveColor;
-    final dotOffset = offset - offset.toInt();
+    final rawOffset = offset.value;
+    final dotOffset = rawOffset - rawOffset.toInt();
     // handle dot travel from end to start (for infinite pager support)
-    if (offset > count - 1) {
+    if (rawOffset > count - 1) {
       final startDot = calcPortalTravel(size, effect.dotWidth / 2, dotOffset);
       canvas.drawRRect(startDot, activeDotPainter);
 
@@ -43,7 +45,7 @@ class SlidePainter extends BasicIndicatorPainter {
       return;
     }
 
-    final xPos = offset * distance;
+    final xPos = rawOffset * distance;
     final yPos = size.height / 2;
     final rRect = RRect.fromLTRBR(
       xPos,

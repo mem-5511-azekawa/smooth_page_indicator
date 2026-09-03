@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() {
@@ -14,8 +14,8 @@ void main() {
     });
 
     test('defaults static instance has correct values', () {
-      expect(DefaultIndicatorColors.defaults.active, Colors.indigo);
-      expect(DefaultIndicatorColors.defaults.inactive, Colors.grey);
+      expect(DefaultIndicatorColors.defaults.active, Color(0xFF3F51B5));
+      expect(DefaultIndicatorColors.defaults.inactive, Color(0xFF9E9E9E));
     });
 
     test('resolveActiveColor returns effect activeDotColor when not null', () {
@@ -112,7 +112,7 @@ void main() {
 
   group('SmoothPageIndicatorTheme', () {
     test('creates instance with null values by default', () {
-      const theme = SmoothPageIndicatorTheme();
+      const theme = SmoothPageIndicatorTheme(child: SizedBox());
       expect(theme.effect, isNull);
       expect(theme.defaultColors, isNull);
     });
@@ -126,6 +126,7 @@ void main() {
       const theme = SmoothPageIndicatorTheme(
         effect: effect,
         defaultColors: colors,
+        child: SizedBox(),
       );
       expect(theme.effect, effect);
       expect(theme.defaultColors, colors);
@@ -136,6 +137,7 @@ void main() {
         effect: WormEffect(),
         defaultColors:
             DefaultIndicatorColors(active: Colors.blue, inactive: Colors.grey),
+        child: SizedBox(),
       );
       const newEffect = ExpandingDotsEffect();
       final copied = original.copyWith(effect: newEffect);
@@ -148,6 +150,7 @@ void main() {
         effect: WormEffect(),
         defaultColors:
             DefaultIndicatorColors(active: Colors.blue, inactive: Colors.grey),
+        child: SizedBox(),
       );
       const newColors = DefaultIndicatorColors(
         active: Colors.red,
@@ -163,6 +166,7 @@ void main() {
         effect: WormEffect(),
         defaultColors:
             DefaultIndicatorColors(active: Colors.blue, inactive: Colors.grey),
+        child: SizedBox(),
       );
       final copied = original.copyWith();
       expect(copied.effect, original.effect);
@@ -170,22 +174,37 @@ void main() {
     });
 
     test('lerp returns this when other is not SmoothPageIndicatorTheme', () {
-      const theme = SmoothPageIndicatorTheme(effect: WormEffect());
+      const theme = SmoothPageIndicatorTheme(
+        effect: WormEffect(),
+        child: SizedBox(),
+      );
       final result = theme.lerp(null, 0.5);
       expect(result, theme);
     });
 
     test('lerp lerps same effect types', () {
-      const theme1 = SmoothPageIndicatorTheme(effect: WormEffect(dotWidth: 10));
-      const theme2 = SmoothPageIndicatorTheme(effect: WormEffect(dotWidth: 20));
+      const theme1 = SmoothPageIndicatorTheme(
+        effect: WormEffect(dotWidth: 10),
+        child: SizedBox(),
+      );
+      const theme2 = SmoothPageIndicatorTheme(
+        effect: WormEffect(dotWidth: 20),
+        child: SizedBox(),
+      );
       final result = theme1.lerp(theme2, 0.5);
       expect(result.effect, isA<WormEffect>());
       expect((result.effect as WormEffect).dotWidth, 15.0);
     });
 
     test('lerp switches effect at t=0.5 for different types', () {
-      const theme1 = SmoothPageIndicatorTheme(effect: WormEffect());
-      const theme2 = SmoothPageIndicatorTheme(effect: ExpandingDotsEffect());
+      const theme1 = SmoothPageIndicatorTheme(
+        effect: WormEffect(),
+        child: SizedBox(),
+      );
+      const theme2 = SmoothPageIndicatorTheme(
+        effect: ExpandingDotsEffect(),
+        child: SizedBox(),
+      );
       final resultBefore = theme1.lerp(theme2, 0.4);
       final resultAfter = theme1.lerp(theme2, 0.6);
       expect(resultBefore.effect, isA<WormEffect>());
@@ -198,12 +217,14 @@ void main() {
           active: Color(0xFF000000),
           inactive: Color(0xFF000000),
         ),
+        child: SizedBox(),
       );
       const theme2 = SmoothPageIndicatorTheme(
         defaultColors: DefaultIndicatorColors(
           active: Color(0xFFFFFFFF),
           inactive: Color(0xFFFFFFFF),
         ),
+        child: SizedBox(),
       );
       final result = theme1.lerp(theme2, 0.5);
       expect((result.defaultColors!.active.r * 255).round(), closeTo(128, 1));
@@ -211,10 +232,11 @@ void main() {
     });
 
     test('lerp handles null colors in first theme', () {
-      const theme1 = SmoothPageIndicatorTheme();
+      const theme1 = SmoothPageIndicatorTheme(child: SizedBox());
       const theme2 = SmoothPageIndicatorTheme(
         defaultColors:
             DefaultIndicatorColors(active: Colors.red, inactive: Colors.green),
+        child: SizedBox(),
       );
       final resultBefore = theme1.lerp(theme2, 0.4);
       final resultAfter = theme1.lerp(theme2, 0.6);
@@ -222,7 +244,7 @@ void main() {
       expect(resultAfter.defaultColors, theme2.defaultColors);
     });
 
-    testWidgets('of returns null when no theme extension', (tester) async {
+    testWidgets('of returns null when no inherited theme', (tester) async {
       SmoothPageIndicatorTheme? theme;
       await tester.pumpWidget(
         MaterialApp(
@@ -237,21 +259,26 @@ void main() {
       expect(theme, isNull);
     });
 
-    testWidgets('of returns theme when extension is present', (tester) async {
+    testWidgets('of returns theme when inherited theme is present',
+        (tester) async {
       const expectedTheme = SmoothPageIndicatorTheme(
         effect: ExpandingDotsEffect(),
         defaultColors:
             DefaultIndicatorColors(active: Colors.blue, inactive: Colors.grey),
+        child: SizedBox(),
       );
       SmoothPageIndicatorTheme? theme;
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(extensions: [expectedTheme]),
-          home: Builder(
-            builder: (context) {
-              theme = SmoothPageIndicatorTheme.of(context);
-              return const SizedBox();
-            },
+          home: SmoothPageIndicatorTheme(
+            effect: expectedTheme.effect,
+            defaultColors: expectedTheme.defaultColors,
+            child: Builder(
+              builder: (context) {
+                theme = SmoothPageIndicatorTheme.of(context);
+                return const SizedBox();
+              },
+            ),
           ),
         ),
       );
@@ -266,41 +293,26 @@ void main() {
         effect: ExpandingDotsEffect(),
         defaultColors:
             DefaultIndicatorColors(active: Colors.blue, inactive: Colors.grey),
+        child: SizedBox(),
       );
       late (IndicatorEffect, DefaultIndicatorColors) result;
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(extensions: [expectedTheme]),
-          home: Builder(
-            builder: (context) {
-              result = SmoothPageIndicatorTheme.resolveDefaults(context);
-              return const SizedBox();
-            },
+          home: SmoothPageIndicatorTheme(
+            effect: expectedTheme.effect,
+            defaultColors: expectedTheme.defaultColors,
+            child: Builder(
+              builder: (context) {
+                result = SmoothPageIndicatorTheme.resolveDefaults(context);
+                return const SizedBox();
+              },
+            ),
           ),
         ),
       );
       expect(result.$1, isA<ExpandingDotsEffect>());
       expect(result.$2.active, Colors.blue);
       expect(result.$2.inactive, Colors.grey);
-    });
-
-    testWidgets(
-        'resolveDefaults returns WormEffect and context colors when no theme',
-        (tester) async {
-      late (IndicatorEffect, DefaultIndicatorColors) result;
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData(primaryColor: Colors.purple),
-          home: Builder(
-            builder: (context) {
-              result = SmoothPageIndicatorTheme.resolveDefaults(context);
-              return const SizedBox();
-            },
-          ),
-        ),
-      );
-      expect(result.$1, isA<WormEffect>());
-      expect(result.$2.active, Colors.purple);
     });
   });
 
@@ -309,16 +321,13 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: const [
-              SmoothPageIndicatorTheme(
-                  effect: ExpandingDotsEffect(expansionFactor: 2.5)),
-            ],
-          ),
-          home: Scaffold(
-            body: SmoothPageIndicator(
-              controller: PageController(),
-              count: 5,
+          home: SmoothPageIndicatorTheme(
+            effect: const ExpandingDotsEffect(expansionFactor: 2.5),
+            child: Scaffold(
+              body: SmoothPageIndicator(
+                controller: PageController(),
+                count: 5,
+              ),
             ),
           ),
         ),
@@ -331,16 +340,14 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: const [
-              SmoothPageIndicatorTheme(effect: ExpandingDotsEffect())
-            ],
-          ),
-          home: Scaffold(
-            body: SmoothPageIndicator(
-              controller: PageController(),
-              count: 5,
-              effect: const WormEffect(),
+          home: SmoothPageIndicatorTheme(
+            effect: const ExpandingDotsEffect(),
+            child: Scaffold(
+              body: SmoothPageIndicator(
+                controller: PageController(),
+                count: 5,
+                effect: const WormEffect(),
+              ),
             ),
           ),
         ),
@@ -353,11 +360,11 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: const [SmoothPageIndicatorTheme(effect: ScaleEffect())],
-          ),
-          home: const Scaffold(
-            body: AnimatedSmoothIndicator(activeIndex: 0, count: 5),
+          home: const SmoothPageIndicatorTheme(
+            effect: ScaleEffect(),
+            child: Scaffold(
+              body: AnimatedSmoothIndicator(activeIndex: 0, count: 5),
+            ),
           ),
         ),
       );
@@ -368,18 +375,16 @@ void main() {
     testWidgets('SmoothIndicator uses theme colors', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: const [
-              SmoothPageIndicatorTheme(
-                defaultColors: DefaultIndicatorColors(
-                    active: Colors.purple, inactive: Colors.orange),
+          home: SmoothPageIndicatorTheme(
+            defaultColors: const DefaultIndicatorColors(
+              active: Colors.purple,
+              inactive: Colors.orange,
+            ),
+            child: Scaffold(
+              body: SmoothPageIndicator(
+                controller: PageController(),
+                count: 5,
               ),
-            ],
-          ),
-          home: Scaffold(
-            body: SmoothPageIndicator(
-              controller: PageController(),
-              count: 5,
             ),
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// Paints a color change transition effect between active
@@ -16,18 +17,19 @@ class TransitionPainter extends BasicIndicatorPainter {
   TransitionPainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final current = offset.floor();
+    final rawOffset = offset.value;
+    final current = rawOffset.floor();
     final dotPaint = Paint()
       ..strokeWidth = effect.strokeWidth
       ..style = effect.paintStyle;
 
-    final dotOffset = offset - current;
+    final dotOffset = rawOffset - current;
     for (var i = 0; i < count; i++) {
       var color = effectiveInactiveColor;
       if (i == current) {
@@ -36,7 +38,7 @@ class TransitionPainter extends BasicIndicatorPainter {
             effectiveActiveColor, effectiveInactiveColor, dotOffset)!;
         dotPaint.strokeWidth =
             max(effect.activeStrokeWidth * (1 - dotOffset), effect.strokeWidth);
-      } else if (i - 1 == current || (i == 0 && offset > count - 1)) {
+      } else if (i - 1 == current || (i == 0 && rawOffset > count - 1)) {
         // ! Both a and b are non nullable
         dotPaint.strokeWidth =
             max(effect.activeStrokeWidth * dotOffset, effect.strokeWidth);

@@ -109,36 +109,34 @@ for example, you can customize direction, width, height, radius, spacing, paint 
    
 ```
 
-## Theme-based Colors
-By default, `SmoothPageIndicator` derives its colors from the app theme:
-- `activeDotColor` defaults to `Theme.of(context).primaryColor`
-- `dotColor` defaults to `Theme.of(context).unselectedWidgetColor` with reduced opacity
+## Default Colors
+By default, indicators use these fallback colors:
 
-This means the indicator automatically adapts to your app's color scheme. You can override these by explicitly setting `dotColor` and `activeDotColor` in any effect.
+- `activeDotColor`: `Color(0xFF3F51B5)`
+- `dotColor`: `Color(0xFF9E9E9E)`
+
+These colors do not come from the app's `ThemeData`. Override them for a subtree with `SmoothPageIndicatorTheme`, or set `dotColor` and `activeDotColor` directly on an effect.
 
 ## SmoothPageIndicatorTheme
-You can configure default settings for all `SmoothPageIndicator` and `AnimatedSmoothIndicator` widgets app-wide using `SmoothPageIndicatorTheme`.
+`SmoothPageIndicatorTheme` is an `InheritedTheme` that configures default settings for descendant `SmoothPageIndicator` and `AnimatedSmoothIndicator` widgets. Wrap the subtree that should share the configuration:
 
 ```dart
 MaterialApp(
-  theme: ThemeData.light().copyWith(
-    extensions: [
-      SmoothPageIndicatorTheme(
-        effect: ExpandingDotsEffect(), // default effect when none is specified
-        defaultColors: DefaultIndicatorColors(
-          active: Colors.blue,
-          inactive: Colors.grey,
-        ),
-      ),
-    ],
+  home: SmoothPageIndicatorTheme(
+    effect: ExpandingDotsEffect(), // default effect when none is specified
+    defaultColors: DefaultIndicatorColors(
+      active: Colors.blue,
+      inactive: Colors.grey,
+    ),
+    child: MyHomePage(),
   ),
 )
 ```
 
-- `defaultColors`: Applies to **all** indicator effects across the app (unless overridden by the effect itself)
-- `effect`: The default effect used when no effect is specified in the widget. Colors set within this effect (e.g., `activeDotColor`) only apply to this default effect.
+- `defaultColors`: Applies to all descendant indicator effects unless `dotColor` or `activeDotColor` is set on the effect.
+- `effect`: The default effect when an indicator does not specify one. If omitted, `WormEffect` is used.
 
-This is useful when you want consistent indicator styling across your entire app without repeating the same configuration.   
+This provides consistent indicator styling without relying on or modifying the app theme.   
 
 ## Support the Library
 

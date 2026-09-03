@@ -1,4 +1,23 @@
 # ChangeLog
+## [3.0.0] [Breaking change]
+- **Breaking**: `SmoothPageIndicator` no longer derives its default colors from the app's `ThemeData`. The fallback colors are now `Color(0xFF3F51B5)` for active dots and `Color(0xFF9E9E9E)` for inactive dots.
+- **Breaking**: `SmoothPageIndicatorTheme` is now an `InheritedTheme`, not a `ThemeExtension`. It configures only its descendant indicators and is no longer added through `ThemeData.extensions`.
+- **Optimization**: Painters now receive their offset as a `ValueListenable<double>`, allowing offset changes to repaint only the painter instead of rebuilding the widget tree.
+- **Breaking**: If you use `SmoothIndicator` directly, its offset now takes a `ValueListenable<double>` rather than a `double`.
+- Migrate to a design-system-agnostic setup by wrapping the indicator subtree with `SmoothPageIndicatorTheme` and providing `DefaultIndicatorColors`:
+
+  ```dart
+  SmoothPageIndicatorTheme(
+    defaultColors: DefaultIndicatorColors(
+      active: Colors.blue,
+      inactive: Colors.grey,
+    ),
+    child: MyPage(),
+  )
+  ```
+
+- To style individual indicators, continue setting `dotColor` and `activeDotColor` on their effects. `WormEffect` remains the fallback when no effect is supplied.
+
 ## [2.0.1]
 - No actual changes, added golden tests to pubignore
 

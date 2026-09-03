@@ -1,5 +1,5 @@
 import 'package:alchemist/alchemist.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:smooth_page_indicator/src/painters/scrolling_dots_painter_with_fixed_center.dart';
@@ -12,11 +12,11 @@ void main() {
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: 10,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
       );
 
       expect(painter.count, 10);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -26,28 +26,29 @@ void main() {
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: AlwaysStoppedAnimation(0.0));
       final painter2 = ScrollingDotsWithFixedCenterPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 1.0);
+          offset: AlwaysStoppedAnimation(1.0));
 
       expect(painter1.shouldRepaint(painter2), isTrue);
     });
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = ScrollingDotsEffect(fixedCenter: true);
+      final offset = ValueNotifier(0.0);
       final painter1 = ScrollingDotsWithFixedCenterPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: offset);
       final painter2 = ScrollingDotsWithFixedCenterPainter(
           indicatorColors: DefaultIndicatorColors.defaults,
           effect: effect,
           count: 10,
-          offset: 0.0);
+          offset: offset);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
     });
@@ -64,7 +65,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -86,7 +87,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 5.0,
+                offset: AlwaysStoppedAnimation(5.0),
               ),
             ),
           ),
@@ -108,7 +109,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 3.5,
+                offset: AlwaysStoppedAnimation(3.5),
               ),
             ),
           ),
@@ -131,7 +132,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -154,7 +155,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 2.5, // Tests boundary condition
+                offset: AlwaysStoppedAnimation(2.5), // Tests boundary condition
               ),
             ),
           ),
@@ -176,7 +177,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 4.3, // Tests current + switchPoint scale
+                offset: AlwaysStoppedAnimation(
+                    4.3), // Tests current + switchPoint scale
               ),
             ),
           ),
@@ -199,7 +201,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 5.7, // Tests current - (switchPoint - 1) scale
+                offset: AlwaysStoppedAnimation(
+                    5.7), // Tests current - (switchPoint - 1) scale
               ),
             ),
           ),
@@ -221,7 +224,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 4.8, // Tests current - switchPoint scale
+                offset: AlwaysStoppedAnimation(
+                    4.8), // Tests current - switchPoint scale
               ),
             ),
           ),
@@ -244,7 +248,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 3.2, // Tests current + (switchPoint + 1) scale
+                offset: AlwaysStoppedAnimation(
+                    3.2), // Tests current + (switchPoint + 1) scale
               ),
             ),
           ),
@@ -270,7 +275,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -296,7 +301,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
               ),
             ),
           ),
@@ -321,7 +326,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 3.0,
+                offset: AlwaysStoppedAnimation(3.0),
               ),
             ),
           ),
@@ -346,7 +351,7 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
               ),
             ),
           ),
@@ -370,7 +375,7 @@ void main() {
                   indicatorColors: DefaultIndicatorColors.defaults,
                   effect: effect,
                   count: 10,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                 ),
               ),
             ),
@@ -393,7 +398,8 @@ void main() {
                 indicatorColors: DefaultIndicatorColors.defaults,
                 effect: effect,
                 count: 10,
-                offset: 7.0, // Some dots will be outside visible range
+                offset: AlwaysStoppedAnimation(
+                    7.0), // Some dots will be outside visible range
               ),
             ),
           ),
@@ -484,7 +490,7 @@ Widget _buildScrollingDotsFixedCenterPainter({
         indicatorColors: DefaultIndicatorColors.defaults,
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/jumping_dot_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -19,7 +20,7 @@ class JumpingDotPainter extends BasicIndicatorPainter {
   JumpingDotPainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
@@ -31,10 +32,11 @@ class JumpingDotPainter extends BasicIndicatorPainter {
     }
     paintStillDots(canvas, size);
     final activeDotPainter = Paint()..color = effectiveActiveColor;
-    final dotOffset = offset - offset.toInt();
+    final rawOffset = offset.value;
+    final dotOffset = rawOffset - rawOffset.toInt();
 
     // handle dot travel from end to start (for infinite pager support)
-    if (offset > count - 1) {
+    if (rawOffset > count - 1) {
       final startDot = calcPortalTravel(size, effect.dotWidth / 2, dotOffset);
       canvas.drawRRect(startDot, activeDotPainter);
 
@@ -57,7 +59,7 @@ class JumpingDotPainter extends BasicIndicatorPainter {
     }
     final piFactor = (dotOffset * math.pi);
     var yPos = size.height / 2;
-    var xPos = offset.floor() * distance;
+    var xPos = rawOffset.floor() * distance;
     var x = (1 - ((math.cos(piFactor) + 1) / 2)) * distance;
     var y = -math.sin(piFactor) * effect.verticalOffset;
     xPos += x;

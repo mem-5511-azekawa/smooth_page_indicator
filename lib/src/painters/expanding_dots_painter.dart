@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/expanding_dots_effect.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -15,7 +17,7 @@ class ExpandingDotsPainter extends BasicIndicatorPainter {
 
   /// Default constructor
   ExpandingDotsPainter({
-    required double offset,
+    required ValueListenable<double> offset,
     required this.effect,
     required int count,
     required DefaultIndicatorColors indicatorColors,
@@ -23,9 +25,10 @@ class ExpandingDotsPainter extends BasicIndicatorPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final current = offset.floor();
+    final rawOffset = offset.value;
+    final current = rawOffset.floor();
     var drawingOffset = -effect.spacing;
-    final dotOffset = offset - current;
+    final dotOffset = rawOffset - current;
 
     for (var i = 0; i < count; i++) {
       var color = effectiveInactiveColor;
@@ -39,7 +42,7 @@ class ExpandingDotsPainter extends BasicIndicatorPainter {
         color = Color.lerp(
             effectiveActiveColor, effectiveInactiveColor, dotOffset)!;
         width = activeDotWidth - expansion;
-      } else if (i - 1 == current || (i == 0 && offset > count - 1)) {
+      } else if (i - 1 == current || (i == 0 && rawOffset > count - 1)) {
         width = effect.dotWidth + expansion;
         // ! Both a and b are non nullable
         color = Color.lerp(

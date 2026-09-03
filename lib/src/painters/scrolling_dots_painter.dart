@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// Paints a scale-dot transition effect between active
@@ -21,13 +21,14 @@ class ScrollingDotsPainter extends BasicIndicatorPainter {
   ScrollingDotsPainter({
     required this.effect,
     required int count,
-    required double offset,
+    required ValueListenable<double> offset,
     required DefaultIndicatorColors indicatorColors,
   }) : super(offset, count, effect, indicatorColors);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final current = super.offset.floor();
+    final rawOffset = offset.value;
+    final current = rawOffset.floor();
     final switchPoint = (effect.maxVisibleDots / 2).floor();
     final firstVisibleDot =
         (current < switchPoint || count - 1 < effect.maxVisibleDots)
@@ -40,14 +41,14 @@ class ScrollingDotsPainter extends BasicIndicatorPainter {
     final willStartScrolling = (current + 1) == switchPoint + 1;
     final willStopScrolling = current + 1 == (count - 1) - switchPoint;
 
-    final dotOffset = offset - offset.toInt();
+    final dotOffset = rawOffset - rawOffset.toInt();
     final dotPaint = Paint()
       ..strokeWidth = effect.strokeWidth
       ..style = effect.paintStyle;
 
     final drawingAnchor = (inPreScrollRange || inAfterScrollRange)
         ? -(firstVisibleDot * distance)
-        : -((offset - switchPoint) * distance);
+        : -((rawOffset - switchPoint) * distance);
 
     final smallDotScale = effect.smallDotScale;
     final activeScale = effect.activeDotScale - 1.0;
@@ -60,12 +61,12 @@ class ScrollingDotsPainter extends BasicIndicatorPainter {
         // ! Both a and b are non nullable
         color = Color.lerp(
             effectiveActiveColor, effectiveInactiveColor, dotOffset)!;
-        if (offset > count - 1 && count > effect.maxVisibleDots) {
+        if (rawOffset > count - 1 && count > effect.maxVisibleDots) {
           scale = effect.activeDotScale - (smallDotScale * dotOffset);
         } else {
           scale = effect.activeDotScale - (activeScale * dotOffset);
         }
-      } else if ((index == firstVisibleDot && offset > count - 1)) {
+      } else if ((index == firstVisibleDot && rawOffset > count - 1)) {
         color = Color.lerp(
             effectiveInactiveColor, effectiveActiveColor, dotOffset)!;
         if (count <= effect.maxVisibleDots) {

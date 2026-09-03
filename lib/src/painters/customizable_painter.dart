@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/src/effects/customizable_effect.dart';
 
 import 'indicator_painter.dart';
@@ -22,7 +23,7 @@ class CustomizablePainter extends IndicatorPainter {
 
   /// Default constructor
   CustomizablePainter({
-    required double offset,
+    required ValueListenable<double> offset,
     required this.effect,
     required this.count,
   }) : super(offset);
@@ -31,9 +32,10 @@ class CustomizablePainter extends IndicatorPainter {
   void paint(Canvas canvas, Size size) {
     var activeDotDecoration = effect.activeDotDecoration;
     var dotDecoration = effect.dotDecoration;
-    final current = offset.floor();
+    final rawOffset = offset.value;
+    final current = rawOffset.floor();
 
-    final dotOffset = offset - current;
+    final dotOffset = rawOffset - current;
     final maxVerticalOffset = max(
       activeDotDecoration.verticalOffset,
       dotDecoration.verticalOffset,
@@ -64,7 +66,7 @@ class CustomizablePainter extends IndicatorPainter {
       if (i == current) {
         decoration =
             DotDecoration.lerp(activeDotDecoration, dotDecoration, dotOffset);
-      } else if (i - 1 == current || (i == 0 && offset > count - 1)) {
+      } else if (i - 1 == current || (i == 0 && rawOffset > count - 1)) {
         decoration =
             DotDecoration.lerp(dotDecoration, activeDotDecoration, dotOffset);
       }

@@ -1,5 +1,5 @@
 import 'package:alchemist/alchemist.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:smooth_page_indicator/src/painters/scale_painter.dart';
@@ -11,12 +11,12 @@ void main() {
       final painter = ScalePainter(
         effect: effect,
         count: 5,
-        offset: 0.0,
+        offset: AlwaysStoppedAnimation(0.0),
         indicatorColors: DefaultIndicatorColors.defaults,
       );
 
       expect(painter.count, 5);
-      expect(painter.offset, 0.0);
+      expect(painter.offset.value, 0.0);
       expect(painter.effect, effect);
     });
 
@@ -25,12 +25,12 @@ void main() {
       final painter1 = ScalePainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: AlwaysStoppedAnimation(0.0),
           indicatorColors: DefaultIndicatorColors.defaults);
       final painter2 = ScalePainter(
           effect: effect,
           count: 5,
-          offset: 1.0,
+          offset: AlwaysStoppedAnimation(1.0),
           indicatorColors: DefaultIndicatorColors.defaults);
 
       expect(painter1.shouldRepaint(painter2), isTrue);
@@ -38,15 +38,16 @@ void main() {
 
     test('shouldRepaint returns false when offset is same', () {
       const effect = ScaleEffect();
+      final offset = ValueNotifier(0.0);
       final painter1 = ScalePainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: offset,
           indicatorColors: DefaultIndicatorColors.defaults);
       final painter2 = ScalePainter(
           effect: effect,
           count: 5,
-          offset: 0.0,
+          offset: offset,
           indicatorColors: DefaultIndicatorColors.defaults);
 
       expect(painter1.shouldRepaint(painter2), isFalse);
@@ -63,7 +64,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -85,7 +86,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 2.5,
+                offset: AlwaysStoppedAnimation(2.5),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -107,7 +108,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 4.5,
+                offset: AlwaysStoppedAnimation(4.5),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -129,7 +130,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 1.5,
+                offset: AlwaysStoppedAnimation(1.5),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -154,7 +155,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -179,7 +180,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -204,7 +205,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 2.0,
+                offset: AlwaysStoppedAnimation(2.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -230,7 +231,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 1.0,
+                offset: AlwaysStoppedAnimation(1.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -254,7 +255,7 @@ void main() {
                 painter: ScalePainter(
                   effect: effect,
                   count: 5,
-                  offset: offset,
+                  offset: ValueNotifier(offset),
                   indicatorColors: DefaultIndicatorColors.defaults,
                 ),
               ),
@@ -280,7 +281,7 @@ void main() {
               painter: ScalePainter(
                 effect: effect,
                 count: 5,
-                offset: 0.0,
+                offset: AlwaysStoppedAnimation(0.0),
                 indicatorColors: DefaultIndicatorColors.defaults,
               ),
             ),
@@ -370,7 +371,7 @@ Widget _buildScalePainter({
         indicatorColors: indicatorColors,
         effect: effect,
         count: count,
-        offset: offset,
+        offset: ValueNotifier(offset),
       ),
     ),
   );

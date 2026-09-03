@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import '../painters/color_transition_painter.dart';
 import '../painters/indicator_painter.dart';
@@ -25,8 +28,8 @@ class ColorTransitionEffect extends BasicIndicatorEffect {
   });
 
   @override
-  IndicatorPainter buildPainter(
-      int count, double offset, DefaultIndicatorColors indicatorColors) {
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors) {
     return TransitionPainter(
       count: count,
       offset: offset,

@@ -1,6 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:ui' as ui show lerpDouble;
-
-import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 import 'package:smooth_page_indicator/src/theme_defaults.dart';
 
@@ -12,8 +12,8 @@ abstract class IndicatorEffect {
   /// Builds a new painter every time the page offset changes
   ///
   /// [indicatorColors] is used to resolve null dot colors
-  IndicatorPainter buildPainter(
-      int count, double offset, DefaultIndicatorColors indicatorColors);
+  IndicatorPainter buildPainter(int count, ValueListenable<double> offset,
+      DefaultIndicatorColors indicatorColors);
 
   /// Calculates the size of canvas based on
   /// dots count, size and spacing
